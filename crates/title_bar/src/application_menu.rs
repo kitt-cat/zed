@@ -1,4 +1,4 @@
-use gpui::{Entity, OwnedMenu, OwnedMenuItem};
+use gpui::{Entity, FocusHandle, Focusable, OwnedMenu, OwnedMenuItem};
 use settings::Settings;
 
 #[cfg(not(target_os = "macos"))]
@@ -21,7 +21,9 @@ actions!(
         /// Navigates to the menu item on the right.
         ActivateMenuRight,
         /// Navigates to the menu item on the left.
-        ActivateMenuLeft
+        ActivateMenuLeft,
+        /// Toggles focus on the application menu.
+        ToggleFocus,
     ]
 );
 
@@ -45,6 +47,13 @@ struct MenuEntry {
 pub struct ApplicationMenu {
     entries: SmallVec<[MenuEntry; 8]>,
     pending_menu_open: Option<String>,
+    focus_handle: FocusHandle,
+}
+
+impl Focusable for ApplicationMenu {
+    fn focus_handle(&self, _: &App) -> FocusHandle {
+        self.focus_handle.clone()
+    }
 }
 
 impl ApplicationMenu {
@@ -59,6 +68,7 @@ impl ApplicationMenu {
                 })
                 .collect(),
             pending_menu_open: None,
+            focus_handle: cx.focus_handle(),
         }
     }
 

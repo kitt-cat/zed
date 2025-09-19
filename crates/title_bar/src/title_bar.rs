@@ -17,7 +17,7 @@ use crate::{
 
 #[cfg(not(target_os = "macos"))]
 use crate::application_menu::{
-    ActivateDirection, ActivateMenuLeft, ActivateMenuRight, OpenApplicationMenu,
+    ActivateDirection, ActivateMenuLeft, ActivateMenuRight, OpenApplicationMenu, ToggleFocus,
 };
 
 use auto_update::AutoUpdateStatus;
@@ -126,6 +126,20 @@ pub fn init(cx: &mut App) {
                 titlebar.update(cx, |titlebar, cx| {
                     if let Some(ref menu) = titlebar.application_menu {
                         menu.update(cx, |menu, cx| menu.open_menu(action, window, cx));
+                    }
+                });
+            }
+        });
+
+        #[cfg(not(target_os = "macos"))]
+        workspace.register_action(|workspace, _: &ToggleFocus, window, cx| {
+            if let Some(titlebar) = workspace
+                .titlebar_item()
+                .and_then(|item| item.downcast::<TitleBar>().ok())
+            {
+                titlebar.update(cx, |titlebar, cx| {
+                    if let Some(ref menu) = titlebar.application_menu {
+                        cx.focus_view(&menu, window);
                     }
                 });
             }

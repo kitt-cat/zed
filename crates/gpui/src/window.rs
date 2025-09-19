@@ -1384,6 +1384,7 @@ impl Window {
 
     /// Move focus to the element associated with the given [`FocusHandle`].
     pub fn focus(&mut self, handle: &FocusHandle) {
+        log::debug!("window::focus called");
         if !self.focus_enabled || self.focus == Some(handle.id) {
             return;
         }
