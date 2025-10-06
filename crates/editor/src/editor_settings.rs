@@ -146,6 +146,10 @@ pub struct StatusBar {
     ///
     /// Default: true
     pub cursor_position_button: bool,
+    /// Whether to show the line endings button in the status bar.
+    ///
+    /// Default: false
+    pub line_endings_button: bool,
 }
 
 #[derive(Copy, Clone, Debug, Serialize, Deserialize, JsonSchema, PartialEq, Eq)]
@@ -613,6 +617,10 @@ pub struct StatusBarContent {
     ///
     /// Default: true
     pub cursor_position_button: Option<bool>,
+    /// Whether to show active line endings button in the status bar.
+    ///
+    /// Default: false
+    pub line_endings_button: Option<bool>,
 }
 
 // Toolbar related settings
