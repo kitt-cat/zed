@@ -1,4 +1,4 @@
-use editor::{Editor, EditorSettings};
+use editor::{Editor, EditorSettings, LineEndingsButtonChoice};
 use gpui::{Entity, Subscription, WeakEntity};
 use language::LineEnding;
 use settings::Settings;
@@ -27,14 +27,32 @@ impl LineEndingIndicator {
 
         cx.notify();
     }
+
+    fn should_show(&self, cx: &Context<Self>) -> bool {
+        match EditorSettings::get_global(cx)
+            .status_bar
+            .line_endings_button
+        {
+            LineEndingsButtonChoice::Always => true,
+            #[rustfmt::skip]
+            LineEndingsButtonChoice::NonNative => match PlatformStyle::platform() {
+                PlatformStyle::Windows => {
+                    self.line_ending != Some(LineEnding::Windows)
+                },
+                PlatformStyle::Mac | PlatformStyle::Linux => {
+                    self.line_ending != Some(LineEnding::Unix)
+                }
+            },
+            LineEndingsButtonChoice::WindowsOnly => self.line_ending == Some(LineEnding::Windows),
+            LineEndingsButtonChoice::UnixOnly => self.line_ending == Some(LineEnding::Unix),
+            LineEndingsButtonChoice::Never => false,
+        }
+    }
 }
 
 impl Render for LineEndingIndicator {
     fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
-        if !EditorSettings::get_global(cx)
-            .status_bar
-            .line_endings_button
-        {
+        if !self.should_show(cx) {
             return div();
         }
 

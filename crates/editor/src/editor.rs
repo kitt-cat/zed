@@ -55,7 +55,7 @@ pub use display_map::{ChunkRenderer, ChunkRendererContext, DisplayPoint, FoldPla
 pub use edit_prediction::Direction;
 pub use editor_settings::{
     CurrentLineHighlight, DocumentColorsRenderMode, EditorSettings, HideMouseMode,
-    ScrollBeyondLastLine, ScrollbarAxes, SearchSettings, ShowMinimap,
+    LineEndingsButtonChoice, ScrollBeyondLastLine, ScrollbarAxes, SearchSettings, ShowMinimap,
 };
 pub use editor_settings_controls::*;
 pub use element::{

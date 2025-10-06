@@ -136,6 +136,27 @@ pub struct JupyterContent {
     pub enabled: Option<bool>,
 }
 
+/// When to indicate line endings in the status bar.
+///
+/// Default: non_native
+#[derive(Copy, Clone, Default, Debug, Serialize, Deserialize, JsonSchema, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
+pub enum LineEndingsButtonChoice {
+    /// Always indicate line endings.
+    Always,
+    /// Indicate when line endings do not match the current platform.
+    #[default]
+    NonNative,
+    /// Indicate when using unix-style (LF) line endings only.
+    #[serde(rename = "lf_only")]
+    UnixOnly,
+    /// Indicate when using windows-style (CRLF) line endings only.
+    #[serde(rename = "crlf_only")]
+    WindowsOnly,
+    /// Do not indicate line endings.
+    Never,
+}
+
 #[derive(Copy, Clone, Default, Debug, Serialize, Deserialize, JsonSchema, PartialEq, Eq)]
 pub struct StatusBar {
     /// Whether to display the active language button in the status bar.
@@ -146,10 +167,10 @@ pub struct StatusBar {
     ///
     /// Default: true
     pub cursor_position_button: bool,
-    /// Whether to show the line endings button in the status bar.
+    /// When to show the line endings button in the status bar.
     ///
-    /// Default: false
-    pub line_endings_button: bool,
+    /// Default: non_native
+    pub line_endings_button: LineEndingsButtonChoice,
 }
 
 #[derive(Copy, Clone, Debug, Serialize, Deserialize, JsonSchema, PartialEq, Eq)]
@@ -619,8 +640,8 @@ pub struct StatusBarContent {
     pub cursor_position_button: Option<bool>,
     /// Whether to show active line endings button in the status bar.
     ///
-    /// Default: false
-    pub line_endings_button: Option<bool>,
+    /// Default: non_native
+    pub line_endings_button: LineEndingsButtonChoice,
 }
 
 // Toolbar related settings
